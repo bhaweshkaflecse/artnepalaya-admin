@@ -37,7 +37,7 @@ export const authenticateWithGoogle = async (idToken, deviceId) => {
       username: payload.name,
       avatarUrl: payload.picture,
       status: 'active',
-      role: 'User' // Default role
+      role: 'user' // Default role
     });
   }
 
@@ -68,7 +68,7 @@ export const verifyOtp = async (phoneNumber, otp, deviceId) => {
   
   let user = await User.findOne({ phoneNumber });
   if (!user) {
-    user = await User.create({ phoneNumber, status: 'active', role: 'User' });
+    user = await User.create({ phoneNumber, status: 'active'});
   }
   
   const tokens = await generateTokens(user._id, user.role, deviceId);

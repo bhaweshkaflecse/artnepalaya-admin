@@ -12,6 +12,10 @@ const envSchema = z.object({
   MONGO_URI: z.string().url(),
   POSTGRES_URI: z.string().url(),
   REDIS_URL: z.string().url(),
+  // ADD THESE:
+  CLOUDINARY_CLOUD_NAME: z.string(),
+  CLOUDINARY_API_KEY: z.string(),
+  CLOUDINARY_API_SECRET: z.string(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

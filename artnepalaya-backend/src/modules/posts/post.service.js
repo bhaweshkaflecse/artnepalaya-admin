@@ -8,8 +8,24 @@ import * as notificationService from '../notifications/notification.service.js';
 import { getOrSetCache, invalidateCache } from '../../shared/utils/cache.js'; 
 
 export const createPost = async (userId, postData) => {
+  // BULLETPROOF TAGS FIX: Handle both Strings (from form-data) and Arrays
   if (postData.tags) {
-    postData.tags = postData.tags.map(t => t.toLowerCase().trim());
+    let tagsArray = [];
+    
+    if (typeof postData.tags === 'string') {
+      try {
+        // Try to parse the string '["art", "nepal"]' into a real array
+        tagsArray = JSON.parse(postData.tags);
+      } catch (e) {
+        // Fallback: if it's just "art", wrap it in an array
+        tagsArray = [postData.tags];
+      }
+    } else if (Array.isArray(postData.tags)) {
+      tagsArray = postData.tags;
+    }
+
+    // Now it is guaranteed to be an array, so .map() will never crash
+    postData.tags = tagsArray.map(t => t.toLowerCase().trim());
   }
 
   const post = await Post.create({ authorId: userId, ...postData });
@@ -18,6 +34,7 @@ export const createPost = async (userId, postData) => {
   if (post.tags && post.tags.length > 0) {
     tagService.incrementTags(post.tags).catch(err => console.error('Tag increment failed:', err));
   }
+  
   return post;
 };
 

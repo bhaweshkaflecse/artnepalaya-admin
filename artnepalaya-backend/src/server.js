@@ -4,6 +4,7 @@ import pkg from 'pg';
 import { createClient } from 'redis';
 import app from './app.js';
 import { env } from './config/env.js';
+import { initCloudinary } from './config/cloudinary.js';
 
 const { Pool } = pkg;
 
@@ -33,7 +34,11 @@ async function startServer() {
     await redisClient.connect();
     console.log('✅ Redis Connected (Cache/Sessions)');
 
-    // 4. Start HTTP Server
+    // 4. Initialize Cloudinary
+    initCloudinary();
+    console.log('✅ Cloudinary Initialized');
+
+    // 5. Start HTTP Server
     server.listen(env.PORT, () => {
       console.log(`🚀 Server running in ${env.NODE_ENV} mode on port ${env.PORT}`);
     });

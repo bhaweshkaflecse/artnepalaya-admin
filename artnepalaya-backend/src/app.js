@@ -8,6 +8,7 @@ import userRoutes from './modules/users/user.routes.js';
 import postRoutes from './modules/posts/post.routes.js';
 import adminRoutes from './modules/admin/admin.routes.js';
 // ... import other modules (tags, notifications, etc.) as needed
+import notificationRoutes from './modules/notifications/notification.routes.js';
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/posts', postRoutes);
 app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/notifications', notificationRoutes);
 
 // 5. Global Error Handler (MUST BE DEFINED AFTER ROUTES)
 app.use(globalErrorHandler);
