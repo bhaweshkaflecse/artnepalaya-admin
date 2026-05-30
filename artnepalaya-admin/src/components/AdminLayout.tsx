@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FileText, Users, ShieldAlert, Award, LogOut } from 'lucide-react';
+import { LayoutDashboard, FileText, Users, ShieldAlert, Award, Image, LogOut } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 
 export const AdminLayout = () => {
@@ -14,6 +14,7 @@ export const AdminLayout = () => {
     { path: '/users', label: 'User Management', icon: Users },
     { path: '/moderation', label: 'Moderation & Reports', icon: ShieldAlert },
     { path: '/featured', label: 'Featured Content', icon: Award },
+    { path: '/auth-media', label: 'Auth Media', icon: Image },
   ];
 
   const handleLogout = () => {
