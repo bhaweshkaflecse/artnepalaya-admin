@@ -6,6 +6,7 @@ import { Posts } from './pages/Posts';
 import { Users } from './pages/Users';
 import { Moderation } from './pages/Moderation';
 import { Featured } from './pages/Featured';
+import { AuthMedia } from './pages/AuthMedia';
 import { useAuthStore } from './store/authStore';
 import type { ReactNode } from 'react';
 
@@ -34,6 +35,7 @@ export default function App() {
           <Route path="users" element={<Users />} />
           <Route path="moderation" element={<Moderation />} />
           <Route path="featured" element={<Featured />} />
+          <Route path="auth-media" element={<AuthMedia />} />
         </Route>
       </Routes>
     </Router>
