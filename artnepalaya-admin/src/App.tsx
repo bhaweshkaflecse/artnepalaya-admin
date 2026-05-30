@@ -1,19 +1,18 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AdminLayout } from './components/AdminLayout';
 import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
+import { Posts } from './pages/Posts';
+import { Users } from './pages/Users';
 import { Moderation } from './pages/Moderation';
 import { Featured } from './pages/Featured';
 import { useAuthStore } from './store/authStore';
+import type { ReactNode } from 'react';
 
-// Mock empty User management component for MVP
-const Users = () => <div className="bg-white p-6 border border-gray-200 rounded-lg">User Directory Configuration...</div>;
-
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const token = useAuthStore((state) => state.token);
   if (!token) return <Navigate to="/login" replace />;
-  return children;
+  return <>{children}</>;
 };
 
 export default function App() {
@@ -21,13 +20,17 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        
-        <Route path="/" element={
-          <ProtectedRoute>
-            <AdminLayout />
-          </ProtectedRoute>
-        }>
+
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<Dashboard />} />
+          <Route path="posts" element={<Posts />} />
           <Route path="users" element={<Users />} />
           <Route path="moderation" element={<Moderation />} />
           <Route path="featured" element={<Featured />} />
