@@ -22,3 +22,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# Local Environment Files
+.env
+.env.development
+.env.production
+.env.local
+*.env
+
+# Keep the example file so the team knows what keys are required
+!.env.example
