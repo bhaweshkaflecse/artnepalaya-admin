@@ -25,6 +25,7 @@ export const Posts = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteModal, setDeleteModal] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchFeatured = useCallback(async () => {
     try {
@@ -40,6 +41,7 @@ export const Posts = () => {
 
   const fetchPosts = useCallback(async (pageCursor?: string) => {
     setLoading(true);
+    setError(null);
     try {
       const params: Record<string, string> = { limit: '15' };
       if (pageCursor) params.cursor = pageCursor;
@@ -49,7 +51,7 @@ export const Posts = () => {
       setCursor(res.data.meta?.nextCursor ?? undefined);
       if (pageCursor) setHasPrevPages(true);
     } catch {
-      // silently handle
+      setError('Failed to load posts. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -62,6 +64,7 @@ export const Posts = () => {
 
   const handleFeatureToggle = async (postId: string, currentlyFeatured: boolean) => {
     setActionLoading(postId);
+    setError(null);
     try {
       if (currentlyFeatured) {
         await api.delete(`/admin/featured/${postId}`);
@@ -75,7 +78,7 @@ export const Posts = () => {
         setFeaturedIds((prev) => new Set(prev).add(postId));
       }
     } catch {
-      // handle error silently
+      setError('Failed to update featured status. Please try again.');
     } finally {
       setActionLoading(null);
     }
@@ -83,11 +86,12 @@ export const Posts = () => {
 
   const handleDelete = async (postId: string) => {
     setActionLoading(postId);
+    setError(null);
     try {
       await api.delete(`/admin/posts/${postId}`);
       setPosts((prev) => prev.filter((p) => p._id !== postId));
     } catch {
-      // handle error silently
+      setError('Failed to delete post. Please try again.');
     } finally {
       setActionLoading(null);
       setDeleteModal(null);
@@ -106,6 +110,7 @@ export const Posts = () => {
 
   return (
     <div className="space-y-4">
+      {error && <div className="bg-red-50 text-red-700 px-4 py-2 rounded-md text-sm mb-4">{error}</div>}
       <div className="flex items-center space-x-4">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />

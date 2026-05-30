@@ -19,14 +19,16 @@ export const Featured = () => {
   const [newPostId, setNewPostId] = useState('');
   const [addError, setAddError] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchFeatured = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await api.get('/admin/featured');
       setFeatured(res.data.data);
     } catch {
-      // silently handle
+      setError('Failed to load featured posts. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -58,11 +60,12 @@ export const Featured = () => {
 
   const handleRemove = async (postId: string) => {
     setActionLoading(true);
+    setError(null);
     try {
       await api.delete(`/admin/featured/${postId}`);
       await fetchFeatured();
     } catch {
-      // silently handle
+      setError('Failed to remove featured post. Please try again.');
     } finally {
       setActionLoading(false);
     }
@@ -70,6 +73,7 @@ export const Featured = () => {
 
   return (
     <div className="space-y-6">
+      {error && <div className="bg-red-50 text-red-700 px-4 py-2 rounded-md text-sm mb-4">{error}</div>}
       <div className="bg-white p-6 rounded-lg border border-gray-200 flex justify-between items-center">
         <div>
           <h3 className="text-lg font-semibold">Featured Carousel</h3>

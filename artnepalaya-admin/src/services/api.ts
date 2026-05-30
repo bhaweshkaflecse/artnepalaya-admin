@@ -20,8 +20,10 @@ const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue = [];
 };
 
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1';
+
 export const api = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
+  baseURL: BASE_URL,
 });
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
@@ -42,9 +44,8 @@ api.interceptors.response.use(
         return new Promise<string>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         }).then((token) => {
-          if (originalRequest.headers) {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-          }
+          originalRequest.headers = originalRequest.headers || {};
+          originalRequest.headers.Authorization = `Bearer ${token}`;
           return api(originalRequest);
         });
       }
@@ -64,7 +65,7 @@ api.interceptors.response.use(
       }
 
       try {
-        const response = await axios.post('http://localhost:8080/api/v1/auth/refresh', {
+        const response = await axios.post(`${BASE_URL}/auth/refresh`, {
           refreshToken,
         });
 
@@ -74,9 +75,8 @@ api.interceptors.response.use(
 
         processQueue(null, accessToken);
 
-        if (originalRequest.headers) {
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        }
+        originalRequest.headers = originalRequest.headers || {};
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);

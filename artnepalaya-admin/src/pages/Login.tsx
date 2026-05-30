@@ -4,6 +4,12 @@ import { useAuthStore } from '../store/authStore';
 import type { User } from '../store/authStore';
 import { api } from '../services/api';
 
+/**
+ * Development-only login flow.
+ * This page accepts a raw Google ID token pasted into a text input.
+ * For production, replace this with a proper OAuth flow using
+ * @react-oauth/google (popup or redirect) so users never handle raw tokens.
+ */
 export const Login = () => {
   const [idToken, setIdToken] = useState('');
   const [loading, setLoading] = useState(false);
