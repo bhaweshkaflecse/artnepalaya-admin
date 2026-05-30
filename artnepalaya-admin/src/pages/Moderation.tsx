@@ -27,9 +27,11 @@ export const Moderation = () => {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchReports = useCallback(async (pageNum: number, status: StatusFilter) => {
     setLoading(true);
+    setError(null);
     try {
       const params: Record<string, string | number> = { page: pageNum, limit: 50 };
       if (status !== 'all') params.status = status;
@@ -37,7 +39,7 @@ export const Moderation = () => {
       setReports(res.data.data);
       setMeta(res.data.meta);
     } catch {
-      // silently handle
+      setError('Failed to load reports. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -49,13 +51,14 @@ export const Moderation = () => {
 
   const handleResolve = async (reportId: string) => {
     setActionLoading(reportId);
+    setError(null);
     try {
       await api.put(`/admin/reports/${reportId}/resolve`);
       setReports((prev) =>
         prev.map((r) => (r._id === reportId ? { ...r, status: 'Resolved' } : r))
       );
     } catch {
-      // silently handle
+      setError('Failed to resolve report. Please try again.');
     } finally {
       setActionLoading(null);
     }
@@ -90,6 +93,7 @@ export const Moderation = () => {
 
   return (
     <div className="space-y-4">
+      {error && <div className="bg-red-50 text-red-700 px-4 py-2 rounded-md text-sm mb-4">{error}</div>}
       <div className="flex items-center space-x-2">
         {filterOptions.map((option) => (
           <button

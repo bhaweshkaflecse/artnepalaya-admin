@@ -32,9 +32,11 @@ export const Users = () => {
     username: string;
   } | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchUsers = useCallback(async (pageNum: number) => {
     setLoading(true);
+    setError(null);
     try {
       const res = await api.get('/admin/users', {
         params: { page: pageNum, limit: 50 },
@@ -42,7 +44,7 @@ export const Users = () => {
       setUsers(res.data.data);
       setMeta(res.data.meta);
     } catch {
-      // silently handle
+      setError('Failed to load users. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -54,13 +56,14 @@ export const Users = () => {
 
   const handleStatusChange = async (userId: string, status: string) => {
     setActionLoading(userId);
+    setError(null);
     try {
       await api.put(`/admin/users/${userId}/status`, { status });
       setUsers((prev) =>
         prev.map((u) => (u._id === userId ? { ...u, status } : u))
       );
     } catch {
-      // silently handle
+      setError('Failed to update user status. Please try again.');
     } finally {
       setActionLoading(null);
       setConfirmAction(null);
@@ -91,6 +94,7 @@ export const Users = () => {
 
   return (
     <div className="space-y-4">
+      {error && <div className="bg-red-50 text-red-700 px-4 py-2 rounded-md text-sm mb-4">{error}</div>}
       <div className="flex items-center space-x-4">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
