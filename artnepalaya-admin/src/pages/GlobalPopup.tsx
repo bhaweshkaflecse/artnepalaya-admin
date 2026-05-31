@@ -5,10 +5,10 @@ import { api } from '../services/api';
 interface PopupConfig {
   heading: string;
   icon: string;
-  bodyText: string;
-  ctaButtonText: string;
+  body: string;
+  ctaText: string;
   ctaLink: string;
-  active: boolean;
+  isActive: boolean;
 }
 
 const iconOptions = ['info', 'warning', 'survey', 'update', 'celebration'];
@@ -17,10 +17,10 @@ export const GlobalPopup = () => {
   const [config, setConfig] = useState<PopupConfig>({
     heading: '',
     icon: 'info',
-    bodyText: '',
-    ctaButtonText: '',
+    body: '',
+    ctaText: '',
     ctaLink: '',
-    active: false,
+    isActive: false,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -37,10 +37,10 @@ export const GlobalPopup = () => {
         setConfig({
           heading: data.heading || '',
           icon: data.icon || 'info',
-          bodyText: data.bodyText || '',
-          ctaButtonText: data.ctaButtonText || '',
+          body: data.body || '',
+          ctaText: data.ctaText || '',
           ctaLink: data.ctaLink || '',
-          active: data.active || false,
+          isActive: data.isActive || false,
         });
       } catch {
         setError('Failed to load popup configuration.');
@@ -144,8 +144,8 @@ export const GlobalPopup = () => {
             </label>
             <textarea
               id="popup-body"
-              value={config.bodyText}
-              onChange={(e) => setConfig({ ...config, bodyText: e.target.value })}
+              value={config.body}
+              onChange={(e) => setConfig({ ...config, body: e.target.value })}
               placeholder="Popup body text"
               rows={4}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent resize-none"
@@ -160,8 +160,8 @@ export const GlobalPopup = () => {
               <input
                 id="popup-cta-text"
                 type="text"
-                value={config.ctaButtonText}
-                onChange={(e) => setConfig({ ...config, ctaButtonText: e.target.value })}
+                value={config.ctaText}
+                onChange={(e) => setConfig({ ...config, ctaText: e.target.value })}
                 placeholder="e.g. Learn More"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
               />
@@ -186,8 +186,8 @@ export const GlobalPopup = () => {
             <input
               id="popup-active"
               type="checkbox"
-              checked={config.active}
-              onChange={(e) => setConfig({ ...config, active: e.target.checked })}
+              checked={config.isActive}
+              onChange={(e) => setConfig({ ...config, isActive: e.target.checked })}
               className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
             />
             <label htmlFor="popup-active" className="text-sm font-medium text-gray-700">
