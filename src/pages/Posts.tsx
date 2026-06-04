@@ -4,7 +4,7 @@ import { api } from '../services/api';
 
 interface Post {
   _id: string;
-  media: string[];
+  media: Array<{url: string; type: string; providerId?: string}>;
   caption?: string;
   authorId: { _id: string; username: string; avatarUrl?: string };
   tags?: string[];
@@ -165,7 +165,7 @@ export const Posts = () => {
                     <td className="p-4">
                       {post.media?.[0] ? (
                         <img
-                          src={post.media[0]}
+                          src={post.media[0].url}
                           alt=""
                           className="w-10 h-10 rounded object-cover"
                         />
